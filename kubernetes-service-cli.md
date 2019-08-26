@@ -2,7 +2,7 @@
 
 copyright:
   years: 2014, 2019
-lastupdated: "2019-08-21"
+lastupdated: "2019-08-26"
 
 keywords: kubernetes, iks, ibmcloud, ic, ks, ibmcloud ks, ibmcloud oc, oc
 
@@ -5066,7 +5066,7 @@ After you create a cluster or worker pool, you can add a zone. When you add a zo
 <p class="note"><img src="images/icon-vpc.png" alt="VPC infrastructure provider icon" width="15" style="width:15px; border-style: none"/> VPC-only command. To add a zone to worker pools in a classic cluster, use the [`ibmcloud ks zone-add-classic` command](#cs_zone_add) instead.</p>
 
 ```
-ibmcloud ks zone-add-vpc-classic --zone ZONE --cluster CLUSTER --worker-pools WORKER_POOL1[,WORKER_POOL2] [--json] [-s]
+ibmcloud ks zone-add-vpc-classic --zone ZONE --subnet-id SUBNET_ID --cluster CLUSTER --worker-pools WORKER_POOL1[,WORKER_POOL2] [--json] [-s]
 ```
 {: pre}
 
@@ -5076,6 +5076,9 @@ ibmcloud ks zone-add-vpc-classic --zone ZONE --cluster CLUSTER --worker-pools WO
 <dl>
 <dt><code>--zone <em>ZONE</em></code></dt>
 <dd>The zone that you want to add. It must be a VPC zone within the cluster's region. To see available VPC zones, run `ibmcloud ks zones --provider vpc-classic`. This value is required.</dd>
+
+<dt><code>--subnet-id <em>SUBNET_ID</em></code></dt>
+<dd>The ID of the subnet that you want to add. The VPC subnet must be within the `zone` that you specify. To see available VPC subnets, run `ibmcloud ks subnets --provider vpc-classic --vpc-d <vpc> --zone <vpc_zone>`. VPC subnets provide IP addresses for your worker nodes and load balancer services in the cluster, so use a VPC subnet with enough IP addresses, such as 256. This value is required.</dd>
 
 <dt><code>--cluster <em>CLUSTER</em></code></dt>
 <dd>The name or ID of the cluster. To list VPC clusters, run `ibmcloud ks clusters --provider vpc-classic`. This value is required.</dd>

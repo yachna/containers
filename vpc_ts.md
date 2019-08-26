@@ -2,7 +2,7 @@
 
 copyright:
   years: 2014, 2019
-lastupdated: "2019-08-21"
+lastupdated: "2019-08-26"
 
 keywords: kubernetes, iks, vpc
 
@@ -63,6 +63,50 @@ Verify that the VPC load balancer for the Kubernetes `LoadBalancer` service exis
 
 * If the VPC load balancer is not listed, it was deleted through the VPC console or the CLI. To recreate the VPC load balancer for your Kubernetes `LoadBalancer` service, restart the Kubernetes master by running `ibmcloud ks apiserver-refresh --cluster <cluster_name_or_id>`. <p class="tip">If you want to remove the load-balancing setup for an app in your VPC cluster, delete the Kubernetes `LoadBalancer` service by running `kubectl delete svc <kubernetes_lb_service_name>`. The VPC load balancer that is associated with the Kubernetes `LoadBalancer` service is automatically deleted from your VPC.</p>
 * If the VPC load balancer is listed, its DNS entry might still be registering. When a VPC load balancer is created, the hostname is registered through a public DNS. In some cases, it can take several minutes for this DNS entry to be replicated to the specific DNS that your client is using. You can either wait for the hostname to be registered in your DNS, or access the VPC load balancer directly by using one of its IP addresses. To find the VPC load balancer IP addresses, look for the **Public IP** column in the output of `ibmcloud is load-balancers`. If after several minutes you cannot reach the load balancer, it might be offline due to provisioning or connection issues. [Open an {{site.data.keyword.cloud_notm}} support case](https://cloud.ibm.com/unifiedsupport/cases/add). For the type, select **Technical**. For the category, select **Network** in the VPC section. In the description, include your cluster ID and the VPC load balancer ID.
+
+<br />
+
+
+## Kubernetes `LoadBalancer` service fails because no IPs are available
+{: #vpc_no_lb}
+
+{: tsSymptoms}
+You publicly exposed your app by creating a Kubernetes `LoadBalancer` service in your VPC cluster. When you run `kubectl describe svc <kubernetes_lb_service_name>`, you see a warning message in the **Events** section similar to one the following:
+```
+The subnet with ID(s) '<subnet_id>' has insufficient available ipv4 addresses.
+```
+{: screen}
+
+{: tsCauses}
+When you create a Kubernetes `LoadBalancer` service in your cluster, a VPC load balancer is automatically created in your VPC. The VPC load balancer puts a floating IP address for your Kubernetes `LoadBalancer` service behind a host name that you can access your app through.
+
+In VPC clusters, both worker nodes and services are assigned IP addresses from the same subnets. Traffic routing is enabled between subnets, so when all IP addresses in a subnet for a zone are used by worker nodes or services, you can still create new worker nodes or services in that zone because they use IP addresses from subnets in other zones. However, if all IP addresses on all subnets are in use, a new Kubernetes `LoadBalancer` service cannot be successfully provisioned.
+
+{: tsResolve}
+After you create a VPC subnet, you cannot resize it or change its IP range. Instead, you must create a larger VPC subnet in one or more zones where you have worker nodes. Then you create a new worker pool using the larger subnets.
+
+1. [Create a new VPC subnet ![External link icon](../icons/launch-glyph.svg "External link icon")](https://cloud.ibm.com/vpc/provision/network) in one or more zones where your cluster has worker nodes. Make sure that you create a subnet that can support both the number of worker nodes and services that you plan to create in your cluster. The default CIDR size of each VPC subnet is `/24`, which can support up to 253 worker nodes and services.
+
+2. Create a new worker pool in your cluster.
+   ```
+   ibmcloud ks worker-pool-create-vpc-classic --name <worker_pool_name> --cluster <cluster_name_or_ID> --flavor <flavor> --vpc-id <VPC_ID> --size-per-zone <number_of_workers_per_zone>
+   ```
+   {: pre}
+
+3. Using the ID for the larger subnets that you created in step 1, add the zones to the worker pool. Repeat the following command for each zone.
+  ```
+  ibmcloud ks zone-add-vpc-classic --zone <zone> --subnet-id <subnet_id> --cluster <cluster_name_or_ID> --worker-pools <worker_pool_name>
+  ```
+  {: pre}
+
+4. After a few minutes, verify that your `LoadBalancer` service has been successfully provisioned onto one of the new subnets. If the service is provisioned successfully, no `Warning` or `Error` events are displayed.
+  ```
+  kubectl describe svc <kubernetes_lb_service_name>
+  ```
+  {: pre}
+
+<br />
+
 
 ## Cannot connect to an app via Ingress
 {: #vpc_ts_alb}
