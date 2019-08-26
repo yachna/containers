@@ -2,7 +2,7 @@
 
 copyright:
   years: 2014, 2019
-lastupdated: "2019-08-23"
+lastupdated: "2019-08-26"
 
 keywords: kubernetes, iks, clusters, worker nodes, worker pools, delete
 
@@ -142,7 +142,7 @@ You can add worker nodes to your VPC cluster by creating a new worker pool.
 
 6. By default, adding a worker pool creates a pool with no zones. To deploy worker nodes in a zone, you must add the zones that you previously retrieved to the worker pool. If you want to spread your worker nodes across multiple zones, repeat this command for each zone.
    ```
-   ibmcloud ks zone-add --zone <zone> --cluster <cluster_name_or_ID> --worker-pool <pool_name> --subnet-id <VPC_subnet_ID>
+   ibmcloud ks zone-add-vpc-classic --zone <zone> --cluster <cluster_name_or_ID> --worker-pool <pool_name> --subnet-id <VPC_subnet_ID>
    ```
    {: pre}
 
@@ -283,7 +283,7 @@ If you have multiple worker pools in your cluster, add the zone to all of them s
    If you want to use different VPC subnets for different worker pools, repeat this command for each subnet and its corresponding worker pools. Any new worker nodes are added to the VPC subnets that you specify, but the VPC subnets for any existing worker nodes are not changed.
    {: tip}
    ```
-   ibmcloud ks zone-add --zone <zone> --cluster <cluster_name_or_ID> --worker-pool <pool_name> [--worker-pool <pool2_name>] --subnet-id
+   ibmcloud ks zone-add-vpc-classic --zone <zone> --cluster <cluster_name_or_ID> --worker-pool <pool_name> [--worker-pool <pool2_name>] --subnet-id
    ```
    {: pre}
 
