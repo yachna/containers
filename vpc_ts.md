@@ -38,7 +38,7 @@ Review some known issues or common error messages that you might encounter when 
 {: tsSymptoms}
 You publicly exposed your app by creating a Kubernetes `LoadBalancer` service in your VPC cluster. When you try to connect to your app by using the host name that is assigned to the Kubernetes `LoadBalancer`, the connection fails or times out.
 
-When you run `kubectl describe svc <kubernetes_lb_service_name>`, you see a warning message similar to one the following in the **Events** section:
+When you run `kubectl describe svc <kubernetes_lb_service_name>`, you see a warning message similar to one of the following in the **Events** section:
 ```
 The VPC load balancer that routes requests to this Kubernetes `LoadBalancer` service is offline.
 ```
@@ -71,7 +71,7 @@ Verify that the VPC load balancer for the Kubernetes `LoadBalancer` service exis
 {: #vpc_no_lb}
 
 {: tsSymptoms}
-You publicly exposed your app by creating a Kubernetes `LoadBalancer` service in your VPC cluster. When you run `kubectl describe svc <kubernetes_lb_service_name>`, you see a warning message in the **Events** section similar to one the following:
+You publicly exposed your app by creating a Kubernetes `LoadBalancer` service in your VPC cluster. When you run `kubectl describe svc <kubernetes_lb_service_name>`, you see a warning message in the **Events** section similar to one of the following:
 ```
 The subnet with ID(s) '<subnet_id>' has insufficient available ipv4 addresses.
 ```
@@ -85,7 +85,7 @@ In VPC clusters, both worker nodes and services are assigned IP addresses from t
 {: tsResolve}
 After you create a VPC subnet, you cannot resize it or change its IP range. Instead, you must create a larger VPC subnet in one or more zones where you have worker nodes. Then you create a new worker pool using the larger subnets.
 
-1. [Create a new VPC subnet ![External link icon](../icons/launch-glyph.svg "External link icon")](https://cloud.ibm.com/vpc/provision/network) in one or more zones where your cluster has worker nodes. Make sure that you create a subnet that can support both the number of worker nodes and services that you plan to create in your cluster. The default CIDR size of each VPC subnet is `/24`, which can support up to 253 worker nodes and services.
+1. [Create a new VPC subnet ![External link icon](../icons/launch-glyph.svg "External link icon")](https://cloud.ibm.com/vpc/provision/network) in the same VPC and in one or more zones where your cluster has worker nodes. Make sure that you create a subnet that can support both the number of worker nodes and services that you plan to create in your cluster. The default CIDR size of each VPC subnet is `/24`, which can support up to 253 worker nodes and services. To check your cluster's VPC and zones, run `ibmcloud ks cluster-get --cluster <cluster_name_or_ID>`.
 
 2. Create a new worker pool in your cluster.
    ```
@@ -93,13 +93,13 @@ After you create a VPC subnet, you cannot resize it or change its IP range. Inst
    ```
    {: pre}
 
-3. Using the ID for the larger subnets that you created in step 1, add the zones to the worker pool. Repeat the following command for each zone.
+3. Using the ID for the larger subnets that you created in step 1, add the zones to the worker pool. Repeat the following command for each zone and subnet.
   ```
   ibmcloud ks zone-add-vpc-classic --zone <zone> --subnet-id <subnet_id> --cluster <cluster_name_or_ID> --worker-pools <worker_pool_name>
   ```
   {: pre}
 
-4. After a few minutes, verify that your `LoadBalancer` service has been successfully provisioned onto one of the new subnets. If the service is provisioned successfully, no `Warning` or `Error` events are displayed.
+4. After a few minutes, verify that your `LoadBalancer` service is successfully provisioned onto one of the new subnets. If the service is provisioned successfully, no `Warning` or `Error` events are displayed.
   ```
   kubectl describe svc <kubernetes_lb_service_name>
   ```
