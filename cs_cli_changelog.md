@@ -2,7 +2,7 @@
 
 copyright:
   years: 2014, 2019
-lastupdated: "2019-08-12"
+lastupdated: "2019-08-27"
 
 keywords: kubernetes, iks
 
@@ -47,6 +47,16 @@ Refer to the following table for a summary of changes for each {{site.data.keywo
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>0.3.112</td>
+<td>19 Aug 2019</td>
+<td>
+<ul>
+<li>With the release of the [{{site.data.keyword.containerlong_notm}} version 2 API](/docs/containers?topic=containers-cs_api_install#api_about), the {{site.data.keyword.cloud_notm}} CLI `kubernetes-service` plug-in supports both classic and VPC infrastructure providers. Some `ibmcloud ks` commands support only one type of infrastructure, whereas other commands include additional names or options. For a list of the CLI changes, see [Comparison of Classic and VPC commands](#cli_classic_vpc_about).</li>
+<li>Adds the `--pod-subnet` and `--service-subnet` flags to the `ibmcloud ks cluster-create` commands for standard clusters that run Kubernetes 1.15 or later. If you plan to connect your cluster to on-premises networks, you can avoid subnet conflicts by specifying a custom subnet CIDR to provide the private IP addresses for pods and subnets.</li>
+<li>Enhances the `ibmcloud ks nlb-dns-create` and `ibmcloud ks nlb-dns-add` commands so that you can add more than one IP address at a time. For example, to create a DNS entry for multiple network load balancer IP addresses, use multiple flags such as `ibmcloud ks nlb-dns-create --cluster mycluster --ip IP1 --ip IP2`.</li>
+</ul></td>
+</tr>
 <tr>
 <td>0.3.103</td>
 <td>12 Aug 2019</td>

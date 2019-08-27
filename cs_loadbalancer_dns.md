@@ -2,7 +2,7 @@
 
 copyright:
   years: 2014, 2019
-lastupdated: "2019-08-19"
+lastupdated: "2019-08-27"
 
 keywords: kubernetes, iks, lb2.0, nlb, health check, dns, host name
 
@@ -82,9 +82,9 @@ To create a host name for one or more NLB IP addresses:
   ```
   {: screen}
 
-2. Register the IP by creating a DNS host name. Note that you can initially create the host name with only one IP address.
+2. Register the IP by creating a DNS host name. To specify multiple IP addresses, use multiple `--ip` flags.
   ```
-  ibmcloud ks nlb-dns-create --cluster <cluster_name_or_id> --ip <NLB_IP>
+  ibmcloud ks nlb-dns-create --cluster <cluster_name_or_id> --ip <NLB_IP> --ip <NLB2_IP> ...
   ```
   {: pre}
 
@@ -101,13 +101,7 @@ To create a host name for one or more NLB IP addresses:
   ```
   {: screen}
 
-4. If you have NLBs in each zone of a multizone cluster that expose one app, add the IPs of the other NLBs to the host name. Note that you must run the following command for each IP address that you want to add.
-  ```
-  ibmcloud ks nlb-dns-add --cluster <cluster_name_or_id> --ip <NLB_IP> --nlb-host <host_name>
-  ```
-  {: pre}
-
-5. Optional: Verify that the IPs are registered with your host name by running a `host` or `ns lookup`.
+4. Optional: Verify that the IPs are registered with your host name by running a `host` or `ns lookup`.
   Example command:
   ```
   host mycluster-a1b2cdef345678g9hi012j3kl4567890-0001.us-south.containers.appdomain.cloud
@@ -121,7 +115,7 @@ To create a host name for one or more NLB IP addresses:
   ```
   {: screen}
 
-6. In a web browser, enter the URL to access your app through the host name that you created.
+5. In a web browser, enter the URL to access your app through the host name that you created.
 
 Next, you can [enable health checks on the host name by creating a health monitor](#loadbalancer_hostname_monitor).
 
@@ -308,9 +302,9 @@ You can add and remove NLB IP addresses from host names that you have generated.
 
 **NLB IPs**
 
-If you later add more NLBs in other zones of your cluster to expose the same app, you can add the NLB IPs to the existing host name. Note that you must run the following command for each IP address that you want to add.
+If you later add more NLBs in other zones of your cluster to expose the same app, you can add the NLB IPs to the existing host name.
 ```
-ibmcloud ks nlb-dns-add --cluster <cluster_name_or_id> --ip <NLB_IP> --nlb-host <host_name>
+ibmcloud ks nlb-dns-add --cluster <cluster_name_or_id> --ip <NLB_IP> --ip <NLB2_IP> ... --nlb-host <host_name>
 ```
 {: pre}
 
