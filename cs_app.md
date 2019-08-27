@@ -129,6 +129,10 @@ If you want to expose your app publicly, you have different options that depend 
 *  **Cluster that is made private by using Calico**: You can expose your app by using a [NodePort, load balancer, or Ingress service](/docs/containers?topic=containers-cs_network_planning#private_both_vlans). You also must use a Calico preDNAT network policy to block the public node ports.
 *  **Private VLAN-only standard cluster**: You can expose your app by using a [NodePort, load balancer, or Ingress service](/docs/containers?topic=containers-cs_network_planning#plan_private_vlan). You also must open the port for the service's private IP address in your firewall.
 
+
+### How can I automate my app deployment? 
+After your cluster is fully deployed, you can set up a continuous delivery and continuous integration pipeline for your cluster to automate the deployment and testing of your containerized apps. With {{site.data.keyword.deliverypipelinelong}}, you can choose between pre-defined DevOps templates that help you deploy Kubernetes-native apps and Helm charts, run vulnerability tests, A/B tests, and set up automatic health checks and alerting. For more information, see [Setting up a continuous delivery pipeline for a cluster](#continuous-delivery-pipeline).  
+
 ### After I deploy my app, how can I monitor its health?
 You can set up {{site.data.keyword.cloud_notm}} [logging and monitoring](/docs/containers?topic=containers-health#health) for your cluster. You might also choose to integrate with a third-party [logging or monitoring service](/docs/containers?topic=containers-supported_integrations#health_services).
 {: shortdesc}
@@ -1510,6 +1514,32 @@ To manage rolling updates to your apps:
 
 <br />
 
+
+
+
+## Setting up a continuous delivery pipeline for a cluster
+{: #continuous-delivery-pipeline}
+
+Adopt a DevOps approach by using {{site.data.keyword.deliverypipelinelong}}, which includes open toolchains that automate the building and deployment of containerized apps. 
+{: shortdesc}
+
+1. From the [cluster dashboard](https://cloud.ibm.com/kubernetes/clusters), select the cluster for which you want to set up a continuous delivery pipeline. 
+2. Select the **DevOps** tab. 
+3. Click **Create a toolchain**. 
+4. Review the available toolchains. IBM provides pre-defined toolchains that you can use to deploy, test, and monitor Kubernetes-native apps or Helm charts. You can expand each toolchain to find an overview of the tools that are set up for you and to find the scripts in GitHub that are used to configure the toolchain in your cluster. For more information about each toolchain, see [Toolchain templates](/docs/services/ContinuousDelivery?topic=ContinuousDelivery-cd_about#templates). If you know what tools you want to use, you can create your own toolchain. 
+5. Select the toolchain that you want to use and click **Create**. 
+6. Follow the directions in the console to configure your toolchain. Make sure to include the name of your cluster in your toolchain name so that you can easily find the toolchain that is associated with your cluster later. For more information, see [Creating toolchains](/docs/services/ContinuousDelivery?topic=ContinuousDelivery-toolchains_getting_started). 
+7. Select **Delivery Pipeline** to review the stages of your continuous integration and continuous delivery pipeline. After you create your toolchain, your pipeline is automatically kicked off and runs through the stages that you configured. Make sure that your stages run successfully and correct any errors. 
+8. Modify your toolchain. You can add more tools to your toolchain or change the stages of your delivery pipeline. 
+   1. From the [cluster dashboard](https://cloud.ibm.com/kubernetes/clusters), select the cluster for which you want to set up a continuous delivery pipeline. 
+   2. Select the **DevOps** tab. 
+   3. Select the toolchain that you want to modify. 
+   
+   Having trouble finding the toolchain that you configured for your cluster? If one of the stages in your continuous delivery pipeline fails, the toolchain does not show in the **DevOps** tab of your cluster. Make sure to review errors in your pipeline by selecting your toolchain from the [{{site.data.keyword.contdelivery_short}} dashboard](https://cloud.ibm.com/devops/toolchains) directly. 
+   {: tip}
+
+<br />
+ 
 
 ## Copying deployments to another cluster
 {: #copy_apps_cluster}
